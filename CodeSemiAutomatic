@@ -1,0 +1,191 @@
+#include <Wire.h>
+#include <Servo.h>
+
+// Definição dos pinos dos motores
+const int dirPin = 26;
+const int stepPin = 28;
+const int stepsPerRevolution = 800;
+const int angulo = 0;  // Variável para armazenar o ângulo do servo
+Servo meuServo;
+
+const int dirPin2 = 30;
+const int stepPin2 = 32;
+const int stepsPerRevolution2 = 1200;
+
+const int dirPin3 = 34;
+const int stepPin3 = 36;
+const int stepsPerRevolution3 = 2400;
+
+// Definição dos pinos dos botões
+const int buttonRight1 = 2;  //1 recuo trolley
+const int buttonRight2 = 4;  // 2 direita trilho
+const int buttonRight3 = 7;  //3 subida atuador linear
+const int buttonLeft1 = 6;   //4 avanço trolley
+const int buttonLeft2 = 8;   //5 esquerda trilho
+const int buttonLeft3 = 3;   //6 descida atuador linear
+const int servoButton = 5;   // Botão para controlar o servo
+
+// Definição do pino do sensor de Infravermelho
+const int irSensorPin = 10;
+
+// Estado atual do servo
+//bool servoState = false;
+bool estadoBotaoAnterior = HIGH;  // Armazena o estado anterior do botão
+bool estadoServo = false;         // Indica se o servo está em 180° ou 110°
+
+void setup() {
+  // Configura os pinos dos motores como saída
+  pinMode(dirPin, OUTPUT);
+  pinMode(stepPin, OUTPUT);
+  pinMode(dirPin2, OUTPUT);
+  pinMode(stepPin2, OUTPUT);
+  pinMode(dirPin3, OUTPUT);
+  pinMode(stepPin3, OUTPUT);
+
+  // Configura os pinos dos botões como entrada com pull-up interno
+  pinMode(buttonRight1, INPUT_PULLUP);
+  pinMode(buttonLeft1, INPUT_PULLUP);
+  pinMode(buttonRight2, INPUT_PULLUP);
+  pinMode(buttonLeft2, INPUT_PULLUP);
+  pinMode(buttonRight3, INPUT_PULLUP);
+  pinMode(buttonLeft3, INPUT_PULLUP);
+  pinMode(servoButton, INPUT_PULLUP);
+
+  // Configura o pino do sensor de Infravermelho como entrada
+  pinMode(irSensorPin, INPUT);
+
+  meuServo.attach(44);
+}
+
+void loop() {
+
+  delay(20000);
+
+
+  //mover trilho para esquerda
+  digitalWrite(dirPin2, HIGH);
+  for (int i = 0; i < stepsPerRevolution2; i++) {
+    digitalWrite(stepPin2, HIGH);
+    delayMicroseconds(4000);
+    digitalWrite(stepPin2, LOW);
+    delayMicroseconds(4000);
+  }
+  //delay(1000);  // Motor ativado por 1 segundo
+
+  digitalWrite(stepPin2, LOW);  // Motor parado
+
+  delay(1000);
+
+// mover trilho para direita
+  digitalWrite(dirPin, HIGH);
+  for (int i = 0; i < stepsPerRevolution; i++) {
+    digitalWrite(stepPin, HIGH);
+    delayMicroseconds(4000);
+    digitalWrite(stepPin, LOW);
+    delayMicroseconds(4000);
+  }
+
+  digitalWrite(stepPin, LOW);  // Motor parado
+
+  delay(1000);
+
+
+// mover trolley para cima
+  digitalWrite(dirPin3, LOW);
+  for (int i = 0; i < stepsPerRevolution3; i++) {
+    digitalWrite(stepPin3, HIGH);
+    delayMicroseconds(4000);
+    digitalWrite(stepPin3, LOW);
+    delayMicroseconds(4000);
+  }
+  digitalWrite(stepPin3, LOW);  // Motor parado
+
+  delay(1000);
+
+
+
+// servomotor
+  for (int angle = 110; angle <= 180; angle += 1) {
+    meuServo.write(angle);  // Define o ângulo do servo
+    delay(15);              // Aguarda 15ms para o servo mover
+  }
+
+
+
+  digitalWrite(dirPin3, HIGH);
+  for (int i = 0; i < stepsPerRevolution3; i++) {
+    digitalWrite(stepPin3, HIGH);
+    delayMicroseconds(4000);
+    digitalWrite(stepPin3, LOW);
+    delayMicroseconds(4000);
+  }
+  digitalWrite(stepPin3, LOW);  // Motor parado
+
+  delay(1000);
+
+
+
+  digitalWrite(dirPin2, LOW);
+  for (int i = 0; i < stepsPerRevolution2; i++) {
+    digitalWrite(stepPin2, HIGH);
+    delayMicroseconds(4000);
+    digitalWrite(stepPin2, LOW);
+    delayMicroseconds(4000);
+  }
+  digitalWrite(stepPin2, LOW);  // Motor parado
+
+
+  delay(1000);
+
+
+
+  digitalWrite(dirPin, LOW);
+  for (int i = 0; i < stepsPerRevolution; i++) {
+    digitalWrite(stepPin, HIGH);
+    delayMicroseconds(4000);
+    digitalWrite(stepPin, LOW);
+    delayMicroseconds(4000);
+  }
+  digitalWrite(stepPin, LOW);  // Motor parado
+
+  delay(1000);
+
+
+
+
+  digitalWrite(dirPin3, LOW);
+  for (int i = 0; i < stepsPerRevolution3; i++) {
+    digitalWrite(stepPin3, HIGH);
+    delayMicroseconds(4000);
+    digitalWrite(stepPin3, LOW);
+    delayMicroseconds(4000);
+  }
+  digitalWrite(stepPin3, LOW);  // Motor parado
+
+  delay(1000);
+
+
+
+
+  for (int angle = 180; angle >= 110; angle -= 1) {
+    meuServo.write(angle);
+    delay(15);
+  }
+
+
+  digitalWrite(dirPin3, HIGH);
+  for (int i = 0; i < stepsPerRevolution3; i++) {
+    digitalWrite(stepPin3, HIGH);
+    delayMicroseconds(4000);
+    digitalWrite(stepPin3, LOW);
+    delayMicroseconds(4000);
+  }
+  digitalWrite(stepPin3, LOW);  // Motor parado
+
+  delay(1000);
+
+
+
+}
+
+
